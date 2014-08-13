@@ -1,0 +1,35 @@
+@charset "utf-8";
+/* CSS Document */
+
+#sound{
+	width:120px!important;
+}
+
+#toptions{
+	color:black;
+	font-size:1.5em;
+	background-color:rgba(255,255,255,0.75);
+	border:10px solid #FFFFFF;
+	width:50%;
+	height:50%;
+	position:fixed;
+	left:47.5%;
+	top:47.5%;
+	display:none;
+	z-index:1000;
+	padding:2.5% 2.5% 2.5% 2.5%;
+}
+#user-tag{width:auto;}
+#user-tag:hover{text-decoration:underline;}
+
+#overlay-back {
+    position   : fixed;
+    top        : 0;
+    left       : 0;
+    width      : 100%;
+    height     : 100%;
+    background : #000;
+    opacity    : 0.6;
+    filter     : alpha(opacity=60);
+    z-index    : 5;
+	}
