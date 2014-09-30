@@ -12,6 +12,9 @@ function addtags(){
 }
 
 function updatepm(){
+	if(tagpro.spectator!==false){
+		return;
+	}
 	var oldc = document.getElementById('usertags-log');
 	if(oldc!=null){oldc.remove();}
 	var container = document.createElement('div');

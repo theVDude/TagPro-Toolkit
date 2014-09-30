@@ -18,6 +18,80 @@ window.addEventListener('DOMContentLoaded', function(e) {
 	thebutton.remove();
   }
   
+  var niceKeyCodes = {
+        8: "backspace",
+        9: "tab",
+        13: "enter",
+        16: "shift",
+        17: "ctrl",
+        18: "alt",
+        19: "pause/break",
+        20: "caps lock",
+        27: "escape",
+        33: "page up",
+        34: "page down",
+        35: "end",
+        36: "home",
+        37: "left arrow",
+        38: "up arrow",
+        39: "right arrow",
+        40: "down arrow",
+        45: "insert",
+        46: "delete",
+        91: "left window",
+        92: "right window",
+        93: "select key",
+        96: "numpad 0",
+        97: "numpad 1",
+        98: "numpad 2",
+        99: "numpad 3",
+        100: "numpad 4",
+        101: "numpad 5",
+        102: "numpad 6",
+        103: "numpad 7",
+        104: "numpad 8",
+        105: "numpad 9",
+        106: "multiply",
+        107: "add",
+        109: "subtract",
+        110: "decimal point",
+        111: "divide",
+        112: "F1",
+        113: "F2",
+        114: "F3",
+        115: "F4",
+        116: "F5",
+        117: "F6",
+        118: "F7",
+        119: "F8",
+        120: "F9",
+        121: "F10",
+        122: "F11",
+        123: "F12",
+        144: "num lock",
+        145: "scroll lock",
+        186: ",",
+        187: "=",
+        188: ",",
+        189: "-",
+        190: ".",
+        191: "/",
+        192: "`",
+        219: "[",
+        220: "\\",
+        221: "]",
+        222: "'"
+    };
+  
+  function searchKeyUp(e,self){
+       var keynum;
+                if(e.which){			
+            		keynum = e.which;
+                 }
+            self.id=keynum;
+			self.value=niceKeyCodes[keynum] || String.fromCharCode(keynum);
+    }
+  
   function edittagdata(){
 	  var entry = document.getElementById("tag-input-div");
 	  var proname = document.getElementsByTagName('h3')[0].innerHTML.split('<div>')[0];
@@ -144,6 +218,8 @@ if(document.URL.indexOf("/boards") >= 0){
 		  injectScript('js/boards.js');
 		  };
     }if(document.URL.indexOf(":8") >= 0){
+		if(response.macros.enabled==true){
+		injectScript('js/macros.js');}
 		
 		//document.getElementById('tiles').src='leaving this for next version';
 		
@@ -291,7 +367,16 @@ return;
 		var box9=document.getElementById("tags-pubs-check").checked;
 		var box10=document.getElementById("live-tags").checked;
 		var box11=document.getElementsByClassName('draw-object')[0].value;
-		var newset=JSON.stringify({"leaderboards":{"plusminus":lValue},"profile":{"flairwins":wtodValue,"stats":advstatsValue},"tags":{"collect":box5Value,"nogroups":box9,"draw":{"on":box6Value,"live":box10,"border":box7,"spin":box8,"values":[{"x":1,"y":1,"input":box11}]}}});
+		var box12=document.getElementById("macros-enabled").checked;
+		var newMacrosSubmit={};
+		var newAutoSubmit={};
+		for (i = 0; i < document.getElementsByName('macro-value').length; i++){if(document.getElementsByName('macro-value')[i].value.length>0 && document.getElementsByName('macro-keys')[i].id.length>0){newMacrosSubmit[document.getElementsByName('macro-keys')[i].id]={"message": document.getElementsByName('macro-value')[i].value, "toAll": document.getElementsByName('macro-type')[i].checked}}};
+		for (i = 0; i < document.getElementsByName('auto-macro-on').length; i++){newAutoSubmit[document.getElementsByName('auto-macro-on')[i].id]={"enabled": document.getElementsByName('auto-macro-on')[i].checked,"name":document.getElementsByClassName('auto-macro-name')[i].textContent, "toSend":{"toAll": document.getElementsByName('auto-macro-type')[i].checked,"message":document.getElementsByName('auto-macro-value')[i].value}}};
+		var newTogglesSubmit={};
+		for (i = 0; i < document.getElementsByClassName('toggle-input').length; i++){var togTitle=document.getElementsByName('toggle-title')[i].value;if(togTitle.length>0 && document.getElementsByName('toggle-default')[i].value.length>0){newTogglesSubmit[togTitle]={};newTogglesSubmit[togTitle]["default"]=document.getElementsByName('toggle-default')[i].value;newTogglesSubmit[togTitle]["keyvalues"]={};var currentContainer=document.getElementsByClassName('toggle-container')[i].children;for (x = 0; x < currentContainer.length; x++){if(currentContainer[x].children[1].value.length>0 && currentContainer[x].children[0].id.length>0){newTogglesSubmit[togTitle]["keyvalues"][currentContainer[x].children[0].id]=currentContainer[x].children[1].value;}}}};
+		
+		var newset=JSON.stringify({"leaderboards":{"plusminus":lValue},"profile":{"flairwins":wtodValue,"stats":advstatsValue},"tags":{"collect":box5Value,"nogroups":box9,"draw":{"on":box6Value,"live":box10,"border":box7,"spin":box8,"values":[{"x":1,"y":1,"input":box11}]}},"macros":{"enabled":box12,"manual":newMacrosSubmit,"auto":newAutoSubmit,"toggles":newTogglesSubmit}});
+		
 	  chrome.runtime.sendMessage({
     	from:    'prefs',
     	subject: 'profile',
@@ -353,7 +438,7 @@ return;
 	box8.checked=response.tags.draw.spin;
 	document.getElementById("tags-pubs-check").checked=response.tags.nogroups;
 	document.getElementById("live-tags").checked=response.tags.draw.live;
-	var pagesList=["Settings","Interface","Credits"]
+	var pagesList=["Settings","Interface","Macros","Credits"]
 	var tabs=document.getElementById("tabs");
 	for(x in pagesList){
 		var newHeight=document.getElementById('toptions').clientHeight-200+"px";
@@ -399,27 +484,229 @@ return;
 	yinput.value=response.tags.draw.values[i].y;
 	yinput.disabled=true;
 	tagslist.appendChild(yinput);
-	/*var deletebutton=document.createElement('button');
-	deletebutton.textContent="Delete"
-	tagslist.appendChild(deletebutton);*/
 	  }
-	  //for (x in response.tags.draw.
-	  /*chrome.extension.sendRequest({greeting:"get_scripts"},
-    function(response2) {
-	  if(response2.length>0){
-		  var scripttable='<table><tbody><tr><th>Script</th><th>Edit</th></tr>';
-	  for(x in response2){
-		  scripttable+='<tr><td>'+response2[x].title+'</td><td><button id="'+x+'">Edit</button></td></tr>';
-		  scripttable+='</tr>';
-		  scriptlist.innerHTML=scripttable;
-			//eval(response.scripts[x].script);
-	  }
-	  var scriptbutton = document.getElementById("new-script");
-	  scriptbutton.onclick=appendscript;
-	  
-		}
-		});*/
 		document.getElementById(e).style.display="block";
+		document.getElementById("macros-enabled").checked=response.macros.enabled;
+		var addMacro = document.getElementById('new-macro');
+		var macroDiv = document.getElementById('Macros-input');
+		addMacro.onclick=function(){
+			var newMacroInput=document.createElement('p');
+			newMacroInput.className ="macro-input";
+			newMacroInput.textContent="Macro - All:";
+			var macroTypeInput=document.createElement('input');
+			macroTypeInput.type="checkbox";
+			macroTypeInput.checked=true;
+			macroTypeInput.name="macro-type";
+			newMacroInput.appendChild(macroTypeInput);
+			var keyInput=document.createElement('input');
+			keyInput.placeholder="Key";
+			keyInput.name="macro-keys";
+			keyInput.onkeyup=function(){return searchKeyUp(event,keyInput)};
+			newMacroInput.appendChild(keyInput);
+			var valueInput=document.createElement('input');
+			valueInput.placeholder="Type a message";
+			valueInput.name="macro-value";
+			newMacroInput.appendChild(valueInput);
+			var newMacroButton=document.createElement('button');
+			newMacroButton.textContent="Delete";
+			newMacroButton.onclick=function(){newMacroButton.parentNode.remove();};
+			newMacroInput.appendChild(newMacroButton);
+			macroDiv.appendChild(newMacroInput);
+		}
+		for (x in response.macros.manual){
+			var newMacroInput=document.createElement('p');
+			newMacroInput.className ="macro-input";
+			newMacroInput.textContent="Macro - All:";
+			var macroTypeInput=document.createElement('input');
+			macroTypeInput.type="checkbox";
+			macroTypeInput.checked=false;
+			macroTypeInput.name="macro-type";
+			macroTypeInput.checked=response.macros.manual[x].toAll;
+			newMacroInput.appendChild(macroTypeInput);
+			var keyInput=document.createElement('input');
+			keyInput.placeholder="Key";
+			keyInput.name="macro-keys";
+			keyInput.onkeyup=function(){return searchKeyUp(event,document.activeElement)};
+			keyInput.id=x;
+			keyInput.value=niceKeyCodes[x] || String.fromCharCode(x);
+			newMacroInput.appendChild(keyInput);
+			var valueInput=document.createElement('input');
+			valueInput.placeholder="Type a message";
+			valueInput.name="macro-value";
+			valueInput.value=response.macros.manual[x].message;
+			newMacroInput.appendChild(valueInput);
+			var newMacroButton=document.createElement('button');
+			newMacroButton.textContent="Delete";
+			newMacroButton.onclick=function(){(window.event.target || window.event.srcElement).parentNode.remove();};
+			newMacroInput.appendChild(newMacroButton);
+			macroDiv.appendChild(newMacroInput);
+		}
+		var macroDiv2 = document.getElementById('Macros-Auto');
+		for (x in response.macros.auto){
+			var newMacroInput=document.createElement('p');
+			newMacroInput.className ="macro-input";
+			var macroNameSpan=document.createElement('span');
+			macroNameSpan.textContent=response.macros.auto[x].name;
+			macroNameSpan.className="auto-macro-name";
+			newMacroInput.appendChild(macroNameSpan);
+			var macroOnSpan=document.createElement('span');
+			macroOnSpan.textContent=" - On:";
+			newMacroInput.appendChild(macroOnSpan);
+			var macroOnInput=document.createElement('input');
+			macroOnInput.type="checkbox";
+			macroOnInput.checked=response.macros.auto[x].enabled;
+			macroOnInput.name="auto-macro-on";
+			macroOnInput.id=x;
+			newMacroInput.appendChild(macroOnInput);
+			var macroTypeSpan=document.createElement('span');
+			macroTypeSpan.textContent=" All:";
+			newMacroInput.appendChild(macroTypeSpan);
+			var macroTypeInput=document.createElement('input');
+			macroTypeInput.type="checkbox";
+			macroTypeInput.name="auto-macro-type";
+			macroTypeInput.checked=response.macros.auto[x].toSend.toAll;
+			newMacroInput.appendChild(macroTypeInput);
+			var valueInput=document.createElement('input');
+			valueInput.placeholder="Type a message";
+			valueInput.name="auto-macro-value";
+			valueInput.value=response.macros.auto[x].toSend.message;
+			newMacroInput.appendChild(valueInput);
+			macroDiv2.appendChild(newMacroInput);
+		}
+		var addToggle = document.getElementById('new-toggle');
+		var toggleDiv = document.getElementById('Toggles-input');
+		addToggle.onclick=function(){
+			var newToggle=document.createElement('div');
+			newToggle.style.backgroundColor="rgba(255,255,255,0.25)";
+			newToggle.className ="toggle-input";
+			var titleP=document.createElement('p');
+			var titlePspan=document.createElement('span');
+			titlePspan.textContent="Name: ";
+			titleP.appendChild(titlePspan);
+			var titlePinput=document.createElement('input');
+			titlePinput.name="toggle-title"
+			titleP.appendChild(titlePinput);
+			newToggle.appendChild(titleP);
+			var defaultP=document.createElement('p');
+			var defaultPspan=document.createElement('span');
+			defaultPspan.textContent="Default: ";
+			defaultP.appendChild(defaultPspan);
+			var defaultPinput=document.createElement('input');
+			defaultPinput.name="toggle-default";
+			defaultP.appendChild(defaultPinput);
+			newToggle.appendChild(defaultP);
+			var newToggleContainer=document.createElement('div');
+			newToggleContainer.className="toggle-container";
+			newToggle.appendChild(newToggleContainer);
+			var newToggleButton=document.createElement('button');
+			newToggleButton.textContent="Add";
+			newToggleButton.onclick=function(){
+				var containerDiv=(window.event.target || window.event.srcElement).parentNode.getElementsByTagName('div')[0];
+				var newToggleInput=document.createElement('p');
+				newToggleInput.className ="toggle-inputter";
+				newToggleInput.textContent="Toggle - Key:";
+				var keyInput=document.createElement('input');
+				keyInput.placeholder="Key";
+				keyInput.name="toggle-keys";
+				keyInput.onkeyup=function(){return searchKeyUp(event,keyInput)};
+				newToggleInput.appendChild(keyInput);
+				var valueInput=document.createElement('input');
+				valueInput.placeholder="Type a message";
+				valueInput.name="toggle-value";
+				newToggleInput.appendChild(valueInput);
+				var noToggleButton=document.createElement('button');
+				noToggleButton.textContent="Delete";
+				noToggleButton.onclick=function(){(window.event.target || window.event.srcElement).parentNode.remove();};
+				newToggleInput.appendChild(noToggleButton);
+				containerDiv.appendChild(newToggleInput);				
+				};
+			newToggle.appendChild(newToggleButton);
+			var noToggleButton=document.createElement('button');
+			noToggleButton.textContent="Delete";
+			noToggleButton.onclick=function(){(window.event.target || window.event.srcElement).parentNode.remove();};
+			newToggle.appendChild(noToggleButton);
+			toggleDiv.appendChild(newToggle);
+		}
+		for (x in response.macros.toggles){
+			var i=0;
+			var newToggle=document.createElement('div');
+			newToggle.style.backgroundColor="rgba(255,255,255,0.25)";
+			newToggle.className ="toggle-input";
+			var titleP=document.createElement('p');
+			var titlePspan=document.createElement('span');
+			titlePspan.textContent="Name: ";
+			titleP.appendChild(titlePspan);
+			var titlePinput=document.createElement('input');
+			titlePinput.name="toggle-title";
+			titlePinput.value=x;
+			titleP.appendChild(titlePinput);
+			newToggle.appendChild(titleP);
+			var defaultP=document.createElement('p');
+			var defaultPspan=document.createElement('span');
+			defaultPspan.textContent="Default: ";
+			defaultP.appendChild(defaultPspan);
+			var defaultPinput=document.createElement('input');
+			defaultPinput.name="toggle-default";
+			defaultPinput.value=response.macros.toggles[x]["default"];
+			defaultP.appendChild(defaultPinput);
+			newToggle.appendChild(defaultP);
+			var newToggleContainer=document.createElement('div');
+			newToggleContainer.className="toggle-container";
+			newToggle.appendChild(newToggleContainer);
+			var newToggleButton=document.createElement('button');
+			newToggleButton.textContent="Add";
+			newToggleButton.onclick=function(){
+				var containerDiv=(window.event.target || window.event.srcElement).parentNode.getElementsByTagName('div')[0];
+				var newToggleInput=document.createElement('p');
+				newToggleInput.className ="toggle-inputter";
+				newToggleInput.textContent="Toggle - Key:";
+				var keyInput=document.createElement('input');
+				keyInput.placeholder="Key";
+				keyInput.name="toggle-keys";
+				keyInput.onkeyup=function(){return searchKeyUp(event,keyInput)};
+				newToggleInput.appendChild(keyInput);
+				var valueInput=document.createElement('input');
+				valueInput.placeholder="Type a message";
+				valueInput.name="toggle-value";
+				newToggleInput.appendChild(valueInput);
+				var noToggleButton=document.createElement('button');
+				noToggleButton.textContent="Delete";
+				noToggleButton.onclick=function(){(window.event.target || window.event.srcElement).parentNode.remove();};
+				newToggleInput.appendChild(noToggleButton);
+				containerDiv.appendChild(newToggleInput);				
+				};
+			newToggle.appendChild(newToggleButton);
+			toggleDiv.appendChild(newToggle);
+			for (y in response.macros.toggles[x]["keyvalues"]){
+				var containerDiv=document.getElementsByClassName('toggle-container')[i];
+				var newToggleInput=document.createElement('p');
+				newToggleInput.className ="toggle-inputter";
+				newToggleInput.textContent="Toggle - Key:";
+				var keyInput=document.createElement('input');
+				keyInput.placeholder="Key";
+				keyInput.name="toggle-keys";
+				keyInput.onkeyup=function(){return searchKeyUp(event,keyInput)};
+				keyInput.id=y;
+				keyInput.value=niceKeyCodes[x] || String.fromCharCode(y);
+				newToggleInput.appendChild(keyInput);
+				var valueInput=document.createElement('input');
+				valueInput.placeholder="Type a message";
+				valueInput.name="toggle-value";
+				valueInput.value=response.macros.toggles[x]["keyvalues"][y];
+				newToggleInput.appendChild(valueInput);
+				var noToggleButton=document.createElement('button');
+				noToggleButton.textContent="Delete";
+				noToggleButton.onclick=function(){(window.event.target || window.event.srcElement).parentNode.remove();};
+				newToggleInput.appendChild(noToggleButton);
+				containerDiv.appendChild(newToggleInput);	
+			}
+			var noToggleButton=document.createElement('button');
+				noToggleButton.textContent="Delete";
+				noToggleButton.onclick=function(){(window.event.target || window.event.srcElement).parentNode.remove();};
+				newToggle.appendChild(noToggleButton);
+			i+=1;
+		}
+		
     }
   );
 
@@ -429,6 +716,7 @@ return;
 	var prefexit = document.getElementById("tm-exit");
 	prefexit.onclick = exitpref;
   }
+ 
   
   function appendsettings(){
   	var sound = document.getElementById("sound");

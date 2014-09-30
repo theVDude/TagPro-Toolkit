@@ -8,7 +8,7 @@ var tableData = $('table.board:first').find(' tbody tr td:nth-child(3)');
     if (tableData.length > 0) {
         tableData.each(function() { games.push($(this).text()); });
     }
-$('table.board.smaller').before('<button id="total-button">Totals</button><button id="game-button">Per Game</button><button id="minute-button">Per Minute</button>')
+$('table.board.smaller').before('<div id="stats-buttons"><button id="total-button">Totals</button><button id="game-button">Per Game</button><button id="minute-button">Per Minute</button></div>')
 $('table.board.smaller').after('<table class="board smaller" id="bygame" style="display:none;margin-top:0px;"><tr><th><th>Tags</th><th>Popped</th><th>Grabs</th><th>Drops</th><th>Hold</th><th>Captures</th><th>Prevent</th><th>Returns</th><th>Support</th></th></tr></table>');
 
 
@@ -42,10 +42,10 @@ if (todaygames.length > 0) {
 	for (x in todaygames) {
 		if (x==4 || x==6){
 			var hhmmss = todaygames[x].split(':');
-		var val = Math.round(((+hhmmss[0]) * 60 * 60 + (+hhmmss[1]) * 60 + (+hhmmss[2]))*10/games[0])/10;
+		var val = (((+hhmmss[0]) * 60 * 60 + (+hhmmss[1]) * 60 + (+hhmmss[2]))/games[0]).toFixed(1);
 		}
 		else{
-		var val = Math.round(todaygames[x]*10/games[0])/10;
+		var val = (todaygames[x]/games[0]).toFixed(2);
 		}
 		$('#toda').append('<td class="alt">'+val+'</td>');
 		
@@ -56,10 +56,10 @@ if (weekgames.length > 0) {
 	for (x in weekgames) {
 		if (x==4 || x==6){
 			var hhmmss = weekgames[x].split(':');
-		var val = Math.round(((+hhmmss[0]) * 60 * 60 + (+hhmmss[1]) * 60 + (+hhmmss[2]))*10/games[1])/10;
+		var val = (((+hhmmss[0]) * 60 * 60 + (+hhmmss[1]) * 60 + (+hhmmss[2]))/games[1]).toFixed(1);
 		}
 		else{
-		var val = Math.round(weekgames[x]*10/games[1])/10;
+		var val = (weekgames[x]/games[1]).toFixed(2);
 		}
 		$('#wee').append('<td>'+val+'</td>');
 		
@@ -70,10 +70,10 @@ if (monthgames.length > 0) {
 	for (x in monthgames) {
 		if (x==4 || x==6){
 			var hhmmss = monthgames[x].split(':');
-		var val = Math.round(((+hhmmss[0]) * 60 * 60 + (+hhmmss[1]) * 60 + (+hhmmss[2]))*10/games[2])/10;
+		var val = (((+hhmmss[0]) * 60 * 60 + (+hhmmss[1]) * 60 + (+hhmmss[2]))/games[2]).toFixed(1);
 		}
 		else{
-		var val = Math.round(monthgames[x]*10/games[2])/10;
+		var val = (monthgames[x]/games[2]).toFixed(2);
 		}
 		$('#mont').append('<td class="alt">'+val+'</td>');
 		
@@ -84,10 +84,10 @@ if (allgames.length > 0) {
 	for (x in allgames) {
 		if (x==4 || x==6){
 			var hhmmss = allgames[x].split(':');
-		var val = Math.round(((+hhmmss[0]) * 60 * 60 + (+hhmmss[1]) * 60 + (+hhmmss[2]))*10/games[3])/10;
+		var val = (((+hhmmss[0]) * 60 * 60 + (+hhmmss[1]) * 60 + (+hhmmss[2]))/games[3]).toFixed(1);
 		}
 		else{
-		var val = Math.round(allgames[x]*10/games[3])/10;
+		var val = (allgames[x]/games[3]).toFixed(2);
 		}
 		$('#allg').append('<td>'+val+'</td>');
 		
@@ -107,10 +107,10 @@ if (todaygames.length > 0) {
 	for (x in todaygames) {
 		if (x==4 || x==6){
 			var hhmmss = todaygames[x].split(':');
-		var val = Math.round(((+hhmmss[0]) * 60 * 60 + (+hhmmss[1]) * 60 + (+hhmmss[2]))*10/times[0])/10;
+		var val = (((+hhmmss[0]) * 60 * 60 + (+hhmmss[1]) * 60 + (+hhmmss[2]))/times[0]).toFixed(1);
 		}
 		else{
-		var val = Math.round(todaygames[x]*10/times[0])/10;
+		var val = (todaygames[x]/times[0]).toFixed(2);
 		}
 		lines.push('<td class="alt">'+val+'</td>');
 		
@@ -124,10 +124,10 @@ if (weekgames.length > 0) {
 	for (x in weekgames) {
 		if (x==4 || x==6){
 			var hhmmss = weekgames[x].split(':');
-		var val = Math.round(((+hhmmss[0]) * 60 * 60 + (+hhmmss[1]) * 60 + (+hhmmss[2]))*10/times[1])/10;
+		var val = (((+hhmmss[0]) * 60 * 60 + (+hhmmss[1]) * 60 + (+hhmmss[2]))/times[1]).toFixed(1);
 		}
 		else{
-		var val = Math.round(weekgames[x]*10/times[1])/10;
+		var val = (weekgames[x]/times[1]).toFixed(2);
 		}
 		lines.push('<td>'+val+'</td>');
 		
@@ -141,10 +141,10 @@ if (monthgames.length > 0) {
 	for (x in monthgames) {
 		if (x==4 || x==6){
 			var hhmmss = monthgames[x].split(':');
-		var val = Math.round(((+hhmmss[0]) * 60 * 60 + (+hhmmss[1]) * 60 + (+hhmmss[2]))*10/times[2])/10;
+		var val = (((+hhmmss[0]) * 60 * 60 + (+hhmmss[1]) * 60 + (+hhmmss[2]))/times[2]).toFixed(1);
 		}
 		else{
-		var val = Math.round(monthgames[x]*10/times[2])/10;
+		var val = (monthgames[x]/times[2]).toFixed(2);
 		}
 		lines.push('<td class="alt">'+val+'</td>');
 		
@@ -158,10 +158,10 @@ if (allgames.length > 0) {
 	for (x in allgames) {
 		if (x==4 || x==6){
 			var hhmmss = allgames[x].split(':');
-		var val = Math.round(((+hhmmss[0]) * 60 * 60 + (+hhmmss[1]) * 60 + (+hhmmss[2]))*10/times[3])/10;
+		var val = (((+hhmmss[0]) * 60 * 60 + (+hhmmss[1]) * 60 + (+hhmmss[2]))/times[3]).toFixed(1);
 		}
 		else{
-		var val = Math.round(allgames[x]*10/times[3])/10;
+		var val = (allgames[x]/times[3]).toFixed(2);
 		}
 		lines.push('<td>'+val+'</td>');
 		
@@ -170,7 +170,6 @@ if (allgames.length > 0) {
 	tablelist.push(lines)
 }
 $('#byminute').append(tablelist.join());
-console.log(tablelist)
 if(document.getElementById('showSettings')!==null && typeof highscores!==undefined){
 $('#minute-button').after('<button id="high-button">High Scores</button>');
 var timeNow = Date.now()-10800000;

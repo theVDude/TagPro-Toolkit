@@ -1,4 +1,4 @@
-    <p id="tm-title" style="font-size: 2em; background-color:rgba(0,0,0,0.5); color: white; text-align: center; margin-top: -10px;">TagPro Toolbox >> Settings</p><a id="tm-exit" href="#" style="display:inline;position:absolute;right:0px;top:0px;">[X]</a></div>
+    <p id="tm-title">TagPro Toolbox >> Settings</p><a id="tm-exit" href="#" style="display:inline;position:absolute;right:0px;top:0px;">[X]</a></div>
     	<div id="tabs"></div>
         <div id="main-settings">
         <div id="Settings">
@@ -25,11 +25,34 @@
         <p><input type="checkbox" id="live-tags"> Live tags.</p>
         <div id="tags-list"></div>
         </div>
+        <div id="Macros">
+        <h4>Macros</h4>
+        <p>Enabled: <input type="checkbox" id="macros-enabled"></p>
+        <h5>Manual</h5>
+        <div id="Macros-input"></div>
+        <button type="button" id="new-macro">Add</button>
+        <h5>Auto</h5>
+        <div id="Macros-Auto"></div>
+        <h5>Toggles</h5>
+        <div id="Toggles-input"></div>
+        <button type="button" id="new-toggle">New Toggle</button>
+        <h5>Guide</h5>
+        <p>Here is a list of some different SmartMacros that you can use:</p>
+        <ul>
+        <li><b>{?}</b> - Splits the macros into different strings to be chosen at random. Example: "This might be said{?}Or this might be said!"</li>
+        <li><b>{mypups}</b> - Returns the powerups you currently have. Example: "Coming in hot with {mypups}!"</li>
+        <li><b>{viewopp}</b> - Returns the number of enemy players in view. Example: "{viewopp} in base!"</li>
+        <li><b>{s}</b> - Returns the current number of seconds on the game clock. You can also use {s+n} to add seconds to this time. Example: "PUPs in 10 seconds! :{s+50}"</li>
+        <li><b>{ping}</b> - Returns your current ping. Example: "Laaaaaggggg. {ping} ping!"</li>
+        </ul>
+        <p>You can also create your own SmartMacro system using Toggles. Just add a toggle and include the toggle name in braces ({name}) in your macro to use the keys you select to change the string's value.</p>
+        </div>
         <div id="Credits">
         Created by <a href="http://reddit.com/user/TerraMaris">TerraMaris</a>
         <ul>
         <li>Spinning ball script by <a href="http://reddit.com/user/NewCompte">NewCompte</a></li>
         <li>Spinning border script by <a href="http://reddit.com/user/Cumflakes">CFlakes</a></li>
+        <li>Chat macros based upon the work of <a href="http://reddit.com/user/contact_lens_linux">Steppin</a> and <a href="http://reddit.com/user/watball">Watball</a></li>
         <li>Special thanks to <a href="http://reddit.com/user/DatBlizzard">Some Ball -1</a> for helping make the Live Tags compatible with external spinning scripts!</li>
         </ul>
         </div>

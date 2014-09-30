@@ -32,20 +32,25 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 	else {
 		if (request.subject == "profile_id") {
 		  chrome.storage.sync.get({settings:[]}, function(data) {
-			  var defaultSet ={"leaderboards":{"plusminus":true},"profile":{"stats":true,"flairwins":true},"tags":{"collect":true,"nogroups":true,"draw":{"on":true,"live":true,"border":true,"spin":false,"values":[{"x":1,"y":1,"input":"usertags plusminus"}]}}};
+			  var defaultSet ={"leaderboards":{"plusminus":true},"profile":{"stats":true,"flairwins":true},"tags":{"collect":true,"nogroups":true,"draw":{"on":true,"live":true,"border":true,"spin":false,"values":[{"x":1,"y":1,"input":"usertags plusminus"}]}},"macros":{"enabled":true,"manual":{},"toggles":{},"switches":{},"auto":{"onEnd":{"enabled":true,"name":"Game's End","toSend":{"message":"gg","toAll":true}},"onJoin":{"enabled":false,"name":"Joining","toSend":{"message":"","toAll":true}},"onTeamCap":{"enabled":false,"name":"Team score","toSend":{"message":"","toAll":false}},"onWin":{"enabled":false,"name":"Win","toSend":{"message":"","toAll":false}},"onLoss":{"enabled":false,"name":"After a loss","toSend":{"message":"","toAll":false}}}}};
 			  var newSet ={};
 			  var update=false;
 			  for(x in data.settings){newSet[x]=data.settings[x]};
 			  var oldversion=data.settings.version;
 			  if(data.settings.version==undefined || oldversion.split('.')[1]!==versionNumber.split('.')[1]){
 				  chrome.tabs.create({
-    				url: 'http://redd.it/2b5lbt'
+    				url: 'http://redd.it/2fmwjb'
  				 });
 				 newSet['version']=versionNumber;
 				 update=true;
 				  }
 			  for (x in defaultSet){if(newSet[x]==undefined){
 				  newSet[x]=defaultSet[x];
+				  update=true;
+				  }
+				  };
+				for (x in defaultSet.macros.auto){if(newSet.macros.auto[x]==undefined){
+				  newSet.macros.auto[x]=defaultSet.macros.auto[x];
 				  update=true;
 				  }
 				  };
@@ -76,13 +81,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 				 chrome.storage.local.set({breakdownstats: defaultscores}, function (tes) {});
 				 sendResponse(defaultscores);
 				 }
-			  });
-	  }else if (request.subject == "get_scripts") {
-		  chrome.storage.local.get({scripts:[]}, function(data){
-				 if(data.scripts[0]!==undefined){sendResponse(data.scripts);
-				 }else{
-					 chrome.storage.local.set({scripts: [{"title":"Test Script","script":"console.log('test');","profile":true,"boards":false,"group":false,"game":false}]}, function () {})};
-					 sendResponse( [{"title":"Test Script","script":"console.log('test');","profile":true,"boards":false,"group":false,"game":false}]);
 			  });
 	  }
 	  else {
