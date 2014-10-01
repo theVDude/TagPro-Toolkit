@@ -1,19 +1,6 @@
 @charset "utf-8";
 /* CSS Document */
 
-button{
-	display: inline-block;
-	min-width: 150px;
-	background-color: #ACE600;
-	color: #000000;
-	font-size: 20pt;
-	text-align: center;
-	font-weight: bold;
-	font-family: monospace;
-	border: solid 3px #608100;
-	padding: 5px 10px 5px 10px;
-	cursor: pointer;
-}
 
 #sound{
 	width:120px!important;
@@ -38,13 +25,15 @@ button{
 	background-color: rgba(255,255,255,0.05);
 }
 
+/*
 #toptions input{
 	color:rbg(0,0,0);
 	background:rgb(200,200,200);
 	border: 1px solid gray;
 }
+*/
 
-#toptions button{
+#tabs button{
 	display: inline-block;
 	background-color: #ACE600;
 	color: #000000;
@@ -76,13 +65,24 @@ button{
     height     : 100%;
     background : #000;
     opacity    : 0.9;
-    filter     : alpha(opacity=90);
     z-index    : 5;
 	}
-	
 #stats-buttons{
-	width:9.5%;
-	float:right;
+	text-align: center;
+}
+
+#stats-buttons button{
+	display: inline-block;
+	background-color: #ACE600;
+	color: #000000;
+	font-size: 1em;
+	text-align: center;
+	font-weight: bold;
+	font-family: monospace;
+	border: solid 3px #608100;
+	padding: 5px 10px 5px 10px;
+	cursor: pointer;
+
 }
 
 table.board{
@@ -102,6 +102,3 @@ table.board td.alt{
 	background-color: transparent!important;
 }
 	
-table.board.smaller{
-	width:90%;
-}

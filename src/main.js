@@ -261,6 +261,30 @@ return;
 		document.head.removeChild(usertag);
 		});
   }
+  if(document.URL.indexOf("/maps")>=0){
+	  var mapTableHeader=document.getElementsByTagName("tr")[0];
+	  var newMapCol=document.createElement("th");
+	  newMapCol.textContent="Win %";
+	  mapTableHeader.appendChild(newMapCol);
+	  chrome.runtime.sendMessage({subject:"get_server_stats"},
+    function(response) {
+		for(i=1;i<document.getElementsByTagName("tr").length;i++){
+			var newCellMap=document.createElement("td");
+			for(m in response.maps){
+				if (m.split(" by ")[0]==document.getElementsByTagName("tr")[i].getElementsByTagName("td")[0].textContent){
+					newCellMap.textContent=Math.round(100*response.maps[m].wins/response.maps[m].games);
+				}
+			}
+			document.getElementsByTagName("tr")[i].appendChild(newCellMap);
+			for (n=0;n<document.getElementsByTagName("tr")[i].getElementsByClassName("ratio")[0].getElementsByTagName("span").length;n++){
+				var mapRatingWidth=0;
+				mapRatingWidth=document.getElementsByTagName("tr")[i].getElementsByClassName("ratio")[0].getElementsByTagName("span")[n].style.width;
+				document.getElementsByTagName("tr")[i].getElementsByClassName("ratio")[0].getElementsByTagName("span")[n].title=mapRatingWidth;
+			}
+		}
+		});
+		
+  }
   if(document.URL.indexOf("/profile") >= 0){
 	  if(document.getElementById('showSettings')!==null){
   chrome.runtime.sendMessage({subject:"get_high"},
@@ -298,14 +322,7 @@ return;
 		document.head.appendChild(usertag);
 		document.head.removeChild(usertag);
 		});
-  /*chrome.extension.sendRequest({greeting:"get_scripts"},
-    function(response) {
-		for(x in response){
-			if(response[x].profile==true){
-			eval(response[x].script);}
-		}
-	})*/
-  
+ 
   }
 	});
   

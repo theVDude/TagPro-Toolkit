@@ -3,20 +3,20 @@ function draw()
     function reallyDraw()
     {
         var oldFunc = tagpro.events.drawPlayer; //store the other scripts version
-	if(oldFunc)
-	{
+        if(oldFunc)
+        {
             oldFunc = oldFunc[0].drawPlayer; //for some reason the actual function ends up in here
-	}
-        
+        }
+
         var image = new Image(); image.src = document.getElementById('spin-image').src;
-        
-	delete tagpro.events.drawPlayer;
+
+        delete tagpro.events.drawPlayer;
         tagpro.events.register({
             drawPlayer: function(player, context, drawPos, TILESIZE) {
                 context.save();
                 if(!oldFunc) //in case there isn't another script draw it ourselves
                 {
-                	if(toolkit.tags.draw.spin==false){tagpro.tiles.drawWithZoom(context, player.team == 1 ? "redball" : "blueball", drawPos);}
+                    if(toolkit.tags.draw.spin==false){tagpro.tiles.drawWithZoom(context, player.team == 1 ? "redball" : "blueball", drawPos);}
                 }
                 //draw user tags
                 if(tagpro.zoom===1 && toolkit.tags.draw.live==true && toolkit.tags.draw.on==true)
@@ -47,19 +47,19 @@ function draw()
                                     var addition='['+withpoints+'/'+againstpoints+']';
                                 }else{var addition=''}
                             }
-                                }
+                        }
                         else{if(drawValues.length==1){ var addition=tagpro.players[player.id][drawValues[0]];}else if(drawValues.length==2){var addition='['+tagpro.players[player.id][drawValues[0]]+'/'+tagpro.players[player.id][drawValues[1]]+']'}
                             }
                         context.strokeText(addition, (drawPos.x+TILESIZE+toolkit.tags.draw.values[i].x*TILESIZE/2), (drawPos.y+toolkit.tags.draw.values[i].y*TILESIZE/5));
                         context.fillText(addition, (drawPos.x+TILESIZE+toolkit.tags.draw.values[i].x*TILESIZE/2), (drawPos.y+toolkit.tags.draw.values[i].y*TILESIZE/5));
-                        }
+                    }
                 }
                 if(!oldFunc) //in case there isn't another script, use default
                 {
                     context.translate(drawPos.x + (TILESIZE / 2) * (1 / tagpro.zoom), drawPos.y + (TILESIZE / 2) * (1 / tagpro.zoom));
                     context.rotate(player.angle)
                     context.translate(-drawPos.x - (TILESIZE / 2) * (1 / tagpro.zoom), -drawPos.y - (TILESIZE / 2) * (1 / tagpro.zoom));
-                    
+
                     if(toolkit.tags.draw.spin!==false){tagpro.tiles.drawWithZoom(context, player.team == 1 ? "redball" : "blueball", drawPos);}
                     //draw balls
                     if(toolkit.tags.draw.border==true){
@@ -84,7 +84,7 @@ function draw()
                             context.closePath();
                             context.fill();
                         };
-                        
+
                         if (player.tagpro) {
                             context.strokeStyle = "#00FF00";
                             context.fillStyle = "rgba(0, 255, 0, .25)";
@@ -104,29 +104,33 @@ function draw()
                 }
                 context.restore();
             }
-	});
+        });
     }
 
-    
+
     tagpro.ready(function(){
 
         setTimeout(reallyDraw,250); //wait to make sure other script has defined tagpro.events.drawPlayer
         if(toolkit.tags.draw.live==false && tagpro.liveTags!==true && toolkit.tags.draw.on==true) //got rid of the tagpro.events.drawPlayer if, because with the delay it was causing double stats to be drawn
         {
             tagpro.socket.on('p', function(data) { 
-                if (data.u !== undefined){
-                    for (pID in tagpro.players){
-                        if(tagpro.players[pID].pmdrawn!=true){
-                            if(usertags[tagpro.players[pID].name]!=undefined && tagpro.players[pID].auth==true)
-                            {
-                                var addition = '['+usertags[tagpro.players[pID].name].plus.with+'/'+usertags[tagpro.players[pID].name].plus.against+']';
-                                console.log(addition);
-                                tagpro.prettyText(addition, 50, 27, usertags[tagpro.players[pID].name].color, !1, !1, tagpro.players[pID].cache.context);
-                                tagpro.players[pID].pmdrawn=true;
+                try{
+                    if (data.u !== undefined){
+                        for (pID in tagpro.players){
+                            if(tagpro.players[pID].pmdrawn!=true){
+                                if(usertags[tagpro.players[pID].name]!=undefined && tagpro.players[pID].auth==true)
+                                {
+                                    var addition = '['+usertags[tagpro.players[pID].name].plus.with+'/'+usertags[tagpro.players[pID].name].plus.against+']';
+                                    console.log(addition);
+                                    tagpro.prettyText(addition, 50, 27, usertags[tagpro.players[pID].name].color, !1, !1, tagpro.players[pID].cache.context);
+                                    tagpro.players[pID].pmdrawn=true;
+                                }
                             }
-                        }
-                    }}
-                
+                        }}
+                }
+                catch(err) {
+                    console.log(err);
+                }
             });
             return;
         }
