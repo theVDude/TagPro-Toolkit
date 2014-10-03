@@ -27,8 +27,8 @@ function draw()
                     }else{var colordraw="#FFFFFF";}
                     context.font = 'bold 8pt Arial';
                     context.fillStyle=colordraw;
-                    context.strokeStyle="#000000";
-                    context.shadowColor="#000000";
+                    context.strokeStyle="#FFFFFF";
+                    context.shadowColor="#FFFFFF";
                     context.shadowOffsetX=0;
                     context.shadowOffsetY=0;
                     context.lineWidth=1;
